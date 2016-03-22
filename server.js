@@ -1,12 +1,21 @@
 // Get the packages we need
 var express = require('express');
 var mongoose = require('mongoose');
-var Llama = require('./models/llama');
+var User = require('./models/user');
+var Task = require('./models/task');
+var config = require('./secret');
 var bodyParser = require('body-parser');
 var router = express.Router();
 
+// mongolab vars
+var mongo_user = config.mongo_user;
+var mongo_password = config.mongo_password;
+
+var mongodburl = 'mongodb://' + mongo_user + ':' + mongo_password + '@ds051873.mlab.com:51873/cs498'
+console.log(mongodburl);
 //replace this with your Mongolab URL
-mongoose.connect('mongodb://localhost/mp4');
+mongoose.connect(mongodburl);
+
 
 // Create our Express application
 var app = express();
@@ -37,14 +46,37 @@ homeRoute.get(function(req, res) {
   res.json({ message: 'Hello World!' });
 });
 
-//Llama route
-var llamaRoute = router.route('/llamas');
+//User route
+var userRoute = router.route('/users');
 
-llamaRoute.get(function(req, res) {
+userRoute.get(function(req, res) {
   res.json([{ "name": "alice", "height": 12 }, { "name": "jane", "height": 13 }]);
 });
 
-//Add more routes here
+userRoute.post(function(req, res) {
+  var user = new User();      // create a new instance of the User model
+  var d = new Date();         // let us set date automatically 
+  user.name = req.body.name; 
+  user.email = req.body.email; 
+  user.pendingTasks = req.body.pendingTasks; 
+  user.dateCreated = d.toJSON(); 
+
+  // save the comment and check for errors
+  user.save(function(err) {
+      if (err){
+          res.send(err);
+      }
+      res.json({ message: 'User created!', name: user.name });
+  });
+});
+
+// user route with id
+var userIdRoute = router.route('/users/:id');
+
+
+var taskRoute = router.route('/tasks');
+var taskIdRoute = router.route('/tasks/:id');
+
 
 // Start the server
 app.listen(port);
