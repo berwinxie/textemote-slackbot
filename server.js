@@ -21,8 +21,8 @@ var db = mongoose.connection;
 // });
 //replace this with your Mongolab URL
 // switch between the two to do local/mlab
-mongoose.connect('mongodb://127.0.0.1:27017/cs498');
-// mongoose.connect(mongodburl);
+// mongoose.connect('mongodb://127.0.0.1:27017/cs498');
+mongoose.connect(mongodburl);
 
 
 // Create our Express application
@@ -76,6 +76,7 @@ userRoute.get(function(req, res) {
     if (params['count']) {
       query = User.count(findParams.where, function(err, count) {
         if (err) {
+          res.status(404);
           return res.send(err);
         }
         return res.json({message:'OK', count:count})
@@ -86,6 +87,7 @@ userRoute.get(function(req, res) {
   else {
     query = User.find(findParams.where, function(err, user) {
       if (err) {
+        res.status(404);
         return res.send(err);
       }
       // console.log(user[0]['name']);
@@ -231,6 +233,7 @@ userIdRoute.delete(function(req, res) {
   }, 
   function(err, user) {
     if (err) {
+      res.status(404);
       return res.send(err);
     }
     // return the user that we deleted so that we can go through all its tasks to set their assigned user to unassigned
