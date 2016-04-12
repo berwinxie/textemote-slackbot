@@ -238,18 +238,35 @@ userIdRoute.put(function(req, res) {
 });
 
 userIdRoute.delete(function(req, res) {
-  User.remove({
-    _id: req.params.id
-  }, 
-  function(err, user) {
+  User.findById(req.params.id, function(err, user) {
     if (err) {
       res.status(404);
       return res.send(err);
     }
-    // return the user that we deleted so that we can go through all its tasks to set their assigned user to unassigned
-    res.status(200);
-    return res.json({ message: "Successfully delete", data:user});
+    // none found
+    if (user == null) {
+      res.status(404);
+      return res.json({message:'User does not exist', data:[]})
+    }
+    User.remove({
+      _id: req.params.id
+    }, 
+    function(err, user) {
+      if (err) {
+        res.status(404);
+        return res.send(err);
+      }
+      // none found
+      if (user == null) {
+        res.status(404);
+        return res.json({message:'User does not exist', data:[]})
+      }
+      // return the user that we deleted so that we can go through all its tasks to set their assigned user to unassigned
+      res.status(200);
+      return res.json({ message: "Successfully delete", data:[]});
+    });
   });
+  
 });
 
 
