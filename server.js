@@ -21,8 +21,8 @@ var db = mongoose.connection;
 // });
 //replace this with your Mongolab URL
 // switch between the two to do local/mlab
-mongoose.connect('mongodb://127.0.0.1:27017/cs498');
-// mongoose.connect(mongodburl);
+// mongoose.connect('mongodb://127.0.0.1:27017/cs498');
+mongoose.connect(mongodburl);
 
 
 // Create our Express application
@@ -79,7 +79,7 @@ userRoute.get(function(req, res) {
           res.status(404);
           return res.send(err);
         }
-        return res.json({message:'OK', count:count})
+        return res.json({message:'Got Counts!', count:count})
       });
     }
   }
@@ -96,7 +96,7 @@ userRoute.get(function(req, res) {
         return res.json({message:'User does not exist', data:user})
       }
       // console.log(user[0]['name']);
-      return res.json({message:'OK', data:user})
+      return res.json({message:'Found Users!', data:user})
     });
   }
 
@@ -129,8 +129,8 @@ userRoute.post(function(req, res) {
   // user info
   user.name = req.body.name; 
   user.email = req.body.email; 
-  console.log('email');
-  console.log(user.email);
+  // console.log('email');
+  // console.log(user.email);
   if (typeof user.email === undefined || user.email === '') {
     res.status(200);
     return res.json({message: 'Email is invalid', data:{}});
@@ -155,7 +155,7 @@ userRoute.post(function(req, res) {
           return res.send(err);
         }
         res.status(201);
-        return res.json({ message: 'OK', data: user});
+        return res.json({ message: 'User Created!', data: user});
       });
     }
   });
@@ -181,21 +181,21 @@ userIdRoute.get(function(req, res) {
       return res.json({message:'User does not exist', data:[]})
     }
     res.status(200);
-    return res.json({message:'OK', data:user})
+    return res.json({message:'User found!', data:user})
   });
 });
 
 
 // should this completely replace the user? i.e. change the dateCreated
 userIdRoute.put(function(req, res) {
-  console.log(req.query);
+  // console.log(req.query);
 
   if (req.query.method == 'push'){ 
     User.findByIdAndUpdate(req.params.id, {$addToSet: {'pendingTasks': req.query.pendingTasks}}, function(err, user) {
       if (err) {
         return res.send(err);
       }
-      return res.json({message:'OK', data:user});
+      return res.json({message:'Successful update!', data:user});
     });
   }
   else if (req.query.method == 'pull'){
@@ -203,18 +203,16 @@ userIdRoute.put(function(req, res) {
       if (err) {
         return res.send(err);
       }
-      return res.json({message:'OK', data:user});
+      return res.json({message:'Successful update!', data:user});
     });
   }
 
   else {
-    console.log('POOOOOOOOOOOOOOOOP');
     User.findById(req.params.id, function(err, user) {
       if (err) {
         return res.send(err);
       }
 
-      console.log('INSIDEPOOOOP');
 
       user['pendingTasks'] = req.body.pendingTasks;
       user['name'] = req.body.name;
@@ -222,14 +220,11 @@ userIdRoute.put(function(req, res) {
       user['dateCreated'] = req.body.dateCreated;
       user['_id'] = req.body._id;
 
-      console.log('pendingtasks');
-      console.log(user['pendingTasks']);
       user.save(function(err, user) {
         if (err){
           return res.send(err);
         }
-        console.log('SAVED THE POOOOP');
-        return res.json({message:'OK', data:user})
+        return res.json({message:'Successful update!', data:user})
       });
 
     });
@@ -277,7 +272,6 @@ var taskRoute = router.route('/tasks');
 taskRoute.get(function(req, res) {
   // getting the parameters for querying
   var params = req.query;
-  // console.log(params);
 
   var findParams = {};
   // if existing in the query, we apply it
@@ -296,12 +290,12 @@ taskRoute.get(function(req, res) {
         }
 
     if (size === 1) {
-      console.log('yay');
+      // console.log('yay');
       query = Task.count(findParams.where, function(err, count) {
             if (err) {
               return res.send(err);
             }
-            return res.json({message:'OK', count:count})
+            return res.json({message:'Found tasks!', count:count})
           });
     }
     else {
@@ -309,8 +303,7 @@ taskRoute.get(function(req, res) {
         if (err) {
           return res.send(err);
         }        
-          console.log(task);
-          return res.json({message:'OK', count:task.length})
+          return res.json({message:'Found tasks!', count:task.length})
         });
 
     }
@@ -321,7 +314,7 @@ taskRoute.get(function(req, res) {
       if (err) {
         return res.send(err);
       }
-      return res.json({message:'OK', data:task})
+      return res.json({message:'Found Tasks!', data:task})
     });
   }
 
@@ -369,7 +362,7 @@ taskRoute.post(function(req, res) {
       return res.send(err);
     }
     res.status(201);
-    return res.json({ message: 'OK', data: task});
+    return res.json({ message: 'Task created!', data: task});
   });
 });
 
@@ -387,32 +380,62 @@ taskIdRoute.get(function(req, res) {
     if (err) {
       return res.send(err);
     }
-    return res.json({message:'OK', data:task});
+    // none found
+    if (task == null) {
+      res.status(404);
+      return res.json({message:'Task does not exist', data:[]})
+    }
+    return res.json({message:'Task found!', data:task});
   });
 });
 
 taskIdRoute.put(function(req, res) {
   var query = {$set : req.query };
-  console.log('task id put');
-  console.log(query);
+  // console.log('task id put');
+  // console.log(query);
   Task.findByIdAndUpdate(req.params.id, query, {new:true}, function(err, task) {
     if (err) {
       return res.send(err);
     }
-    // console.log(task);
-    return res.json({message:'OK', data:task});
+    // none found
+    if (task == null) {
+      res.status(404);
+      return res.json({message:'Task does not exist', data:[]})
+    }
+
+    res.status(200);
+    return res.json({message:'Task updated!', data:task});
   });
 });
 
 taskIdRoute.delete(function(req, res) {
-  Task.remove({
-    _id: req.params.id
-  }, 
-  function(err, user) {
+  Task.findById(req.params.id, function(err, task) {
     if (err) {
+      res.status(404);
       return res.send(err);
     }
-    return res.json({ message: "Successfully deleted task", data: user});
+    // none found
+    if (task == null) {
+      res.status(404);
+      return res.json({message:'Task does not exist', data:[]})
+    }
+    Task.remove({
+      _id: req.params.id
+    }, 
+    function(err, task) {
+      if (err) {
+        res.status(404);
+        return res.send(err);
+      }
+      // none found
+      if (task == null) {
+        res.status(404);
+        return res.json({message:'Task does not exist', data:[]})
+      }
+      // return the Task that we deleted so that we can go through all its tasks to set their assigned user to unassigned
+      res.status(200);
+      return res.json({ message: "Successfully delete", data:[]});
+    });
   });
 });
 
