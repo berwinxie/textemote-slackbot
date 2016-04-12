@@ -21,8 +21,8 @@ var db = mongoose.connection;
 // });
 //replace this with your Mongolab URL
 // switch between the two to do local/mlab
-// mongoose.connect('mongodb://127.0.0.1:27017/cs498');
-mongoose.connect(mongodburl);
+mongoose.connect('mongodb://127.0.0.1:27017/cs498');
+// mongoose.connect(mongodburl);
 
 
 // Create our Express application
@@ -89,6 +89,11 @@ userRoute.get(function(req, res) {
       if (err) {
         res.status(404);
         return res.send(err);
+      }
+      // none found
+      if (user == null) {
+        rest.status(404);
+        return res.json({message:'User does not exist', data:user})
       }
       // console.log(user[0]['name']);
       return res.json({message:'OK', data:user})
@@ -169,6 +174,11 @@ userIdRoute.get(function(req, res) {
     if (err) {
       res.status(404);
       return res.send(err);
+    }
+    // none found
+    if (user == null) {
+      res.status(404);
+      return res.json({message:'User does not exist', data:[]})
     }
     res.status(200);
     return res.json({message:'OK', data:user})
