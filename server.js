@@ -190,36 +190,39 @@ userIdRoute.get(function(req, res) {
 userIdRoute.put(function(req, res) {
   // console.log(req.query);
 
-  if (req.query.method == 'push'){ 
-    User.findByIdAndUpdate(req.params.id, {$addToSet: {'pendingTasks': req.query.pendingTasks}}, function(err, user) {
-      if (err) {
-        return res.send(err);
-      }
-      return res.json({message:'Successful update!', data:user});
-    });
-  }
-  else if (req.query.method == 'pull'){
-    User.findByIdAndUpdate(req.params.id, {$pull: {'pendingTasks': req.query.pendingTasks}}, function(err, user) {
-      if (err) {
-        return res.send(err);
-      }
-      return res.json({message:'Successful update!', data:user});
-    });
-  }
+  // if (req.query.method == 'push'){ 
+  //   User.findByIdAndUpdate(req.params.id, {$addToSet: {'pendingTasks': req.query.pendingTasks}}, function(err, user) {
+  //     if (err) {
+  //       return res.send(err);
+  //     }
+  //     return res.json({message:'Successful update!', data:user});
+  //   });
+  // }
+  // else if (req.query.method == 'pull'){
+  //   User.findByIdAndUpdate(req.params.id, {$pull: {'pendingTasks': req.query.pendingTasks}}, function(err, user) {
+  //     if (err) {
+  //       return res.send(err);
+  //     }
+  //     return res.json({message:'Successful update!', data:user});
+  //   });
+  // }
 
-  else {
+  // else {
+    console.log('yes');
     User.findById(req.params.id, function(err, user) {
       if (err) {
         return res.send(err);
       }
 
-
+      console.log(req.body);
+      // req.body = eval("("+req.body+")");
       user['pendingTasks'] = req.body.pendingTasks;
       user['name'] = req.body.name;
       user['email'] = req.body.email;
       user['dateCreated'] = req.body.dateCreated;
       user['_id'] = req.body._id;
 
+      console.log(user);
       user.save(function(err, user) {
         if (err){
           return res.send(err);
@@ -228,7 +231,7 @@ userIdRoute.put(function(req, res) {
       });
 
     });
-  }
+  // }
   
 });
 
