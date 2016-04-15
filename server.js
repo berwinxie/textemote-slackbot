@@ -298,7 +298,7 @@ taskRoute.get(function(req, res) {
             if (err) {
               return res.send(err);
             }
-            return res.json({message:'Found tasks!', count:count})
+            return res.json({message:'Found tasks!', data:count})
           });
     }
     else {
@@ -306,7 +306,7 @@ taskRoute.get(function(req, res) {
         if (err) {
           return res.send(err);
         }        
-          return res.json({message:'Found tasks!', count:task.length})
+          return res.json({message:'Found tasks!', data:task.length})
         });
 
     }
