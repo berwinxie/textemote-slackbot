@@ -124,7 +124,7 @@ textFaceRoute.post(function(req, res) {
   }
   else {
     return res.json({
-      "text": "See which emotions you can use by typing '/textmote list\n"
+      "text": "See which emotions you can use by typing '/textmote list'\nAdd a new one by using the format: 'add:emotion:emoji', e.g. add:shrug:¯\\_(´◉◞౪◟◉)_/¯"
     });
   }
 
