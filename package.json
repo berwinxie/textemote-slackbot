@@ -1,10 +1,9 @@
 {
-  "name": "mp4_server_starter",
+  "name": "textemote-slackbot",
   "version": "1.0.0",
-  "homepage": "https://github.com/uiuc-web-programming/mp4_server_starter",
+  "homepage": "https://github.com/berwinxie/textemote-slackbot",
   "authors": [
-    "biplabdeka <biplab.deka@gmail.com>",
-    "sskhandek <sskhandek@gmail.com>"
+    "berwin xie"
   ],
   "dependencies": {
     "body-parser": "^1.12.0",
