@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 
 // Define our user schema
 var EmoteSchema   = new mongoose.Schema({
-  name: String,
-  emote: String
+  emotion: String,
+  textface: String
 });
 
 // Export the Mongoose model
