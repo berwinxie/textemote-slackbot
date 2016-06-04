@@ -1,8 +1,8 @@
-# Demo server code for MP4
+# Slack /slash integration API for text emoting
+
+## On your server
 You should be able to do
 `npm install` and `nodemon server.js`
 
-Nodemon does auto-reloading the same way grunt does on the frontend.
-
-You might have to install nodemon on the vagrant machine using
-`npm install -g nodemon`
+## On Slack
+The route to hit with a POST is http://{yourip}/textface

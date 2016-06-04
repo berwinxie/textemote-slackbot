@@ -2,12 +2,10 @@
 var mongoose = require('mongoose');
 
 // Define our user schema
-var UserSchema   = new mongoose.Schema({
+var EmoteSchema   = new mongoose.Schema({
   name: String,
-  email: String,
-  pendingTasks: [String],
-  dateCreated: Date
+  emote: String
 });
 
 // Export the Mongoose model
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Emote', UserSchema);
