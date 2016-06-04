@@ -27,8 +27,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/slackbot');
 // Create our Express application
 var app = express();
 
-// Use environment defined port or 4000
-var port = process.env.PORT || 4000;
+// Use environment defined port or 8888
+var port = process.env.PORT || 8888;
 
 //Allow CORS so that backend and frontend could pe put on different servers
 var allowCrossDomain = function(req, res, next) {
@@ -47,7 +47,18 @@ app.use(bodyParser.urlencoded({
 // All our routes will start with /api
 app.use('/api', router);
 
-// ----------------- USERS ----------------- //
+
+//Default route here
+var homeRoute = router.route('/');
+
+homeRoute.get(function(req, res) {
+  res.json({ message: 'Hello World!' });
+});
+
+console.log("hello world");
+
+
+// ----------------- FACES ----------------- //
 
 // text face route
 var textFaceRoute = router.route('/textface');
