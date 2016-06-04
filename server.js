@@ -124,7 +124,7 @@ textFaceRoute.post(function(req, res) {
   }
   else {
     return res.json({
-      "text": "no params"
+      "text": "See which emotions you can use by typing '/textmote list\n"
     });
   }
 
