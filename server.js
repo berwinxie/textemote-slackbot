@@ -62,25 +62,28 @@ homeRoute.get(function(req, res) {
 var textFaceRoute = router.route('/textface');
 
 textFaceRoute.post(function(req, res) {
-  console.log(req.query);
-  Emote.find({'emotion':req.query.text.toLowerCase()}, function(err, emote) {
+  console.log(req.body);
+  if (req.body.text !== '' || req.body.text !=== undefined) {
+    Emote.find({'emotion':req.body.text.toLowerCase()}, function(err, emote) {
 
-    // emotion not found
-    if (emote.length === 0) {
-      res.status(200);
-      return res.json({
-        "text": 'Emotion was not found Σ(ﾟДﾟ；)'
-      })
-    }
-    else {
-      // return random emotion from list
-      var index = Math.floor(Math.random()*emote.length)
-      return res.json({
-        "response_type": "in_channel",
-        "text": emote[index].textface
-      })
-    }
-  });
+      // emotion not found
+      if (emote.length === 0) {
+        res.status(200);
+        return res.json({
+          "text": 'Emotion was not found Σ(ﾟДﾟ；)'
+        })
+      }
+      else {
+        // return random emotion from list
+        var index = Math.floor(Math.random()*emote.length)
+        return res.json({
+          "response_type": "in_channel",
+          "text": emote[index].textface
+        })
+      }
+    });
+  }
+  
 
 });
 
@@ -88,8 +91,8 @@ textFaceRoute.post(function(req, res) {
 var textFaceInputRoute = router.route('/textfaceinput');
 textFaceInputRoute.post(function(req, res) {
   var emote = new Emote();
-  emote.emotion = req.query.emotion;
-  emote.textface = req.query.textface;
+  emote.emotion = req.body.emotion;
+  emote.textface = req.body.textface;
   if (emote.emotion !== undefined && emote.textface !== undefined) {
     emote.save(function(err) {
       if (err){
@@ -97,7 +100,7 @@ textFaceInputRoute.post(function(req, res) {
         return res.send(err);
       }
       res.status(201);
-      return res.json({ message: 'Emote for ' + req.query.emotion + '(' + req.query.textface + ') created!'});
+      return res.json({ message: 'Emote for ' + req.body.emotion + '(' + req.body.textface + ') created!'});
     });
   }
   else {
