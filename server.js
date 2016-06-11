@@ -71,7 +71,7 @@ textFaceRoute.post(function(req, res) {
     }
 
     // add emotions if in format of: 'add:emotion:emoji'
-    else if (splitString.length === 3 && splitString[0] === 'add' && splitString[1] !== '' && splitString[2] !== '' && splitString[1] !== undefined && splitString[2] !== undefined) {
+    else if (splitString.length >= 3 && splitString[0] === 'add' && splitString[1] !== '' && splitString[2] !== '' && splitString[1] !== undefined && splitString[2] !== undefined) {
       var emote = new Emote();
       emote.emotion = splitString[1];
       // this makes it so if the textface has a : in it, it won't be broken up
